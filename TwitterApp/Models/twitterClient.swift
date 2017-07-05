@@ -18,11 +18,11 @@ class TwitterClient: BDBOAuth1SessionManager {
     let API_REQUEST_TOKEN = "/oauth/request_token"
     let API_AUTHENTICATE_TOKEN = "/oauth/authorize?oauth_token="
     let API_ACCESS_TOKEN = "/oauth/access_token"
-    let API_GET_CURRENT_ACCOUNT = "1.1/account/verify_credentials.json"
-    let API_GET_STATUS_HOME_TIMELINE = "1.1/statuses/home_timeline.json"
-    let API_POST_NEW_STATUS = "1.1/statuses/update.json"
-    let API_POST_NEW_FAVORITE = "1.1/favorites/create.json"
-    let API_POST_DETROY_FAVORITE = "1.1/favorites/destroy.json"
+    let API_GET_CURRENT_ACCOUNT = "/1.1/account/verify_credentials.json"
+    let API_GET_STATUS_HOME_TIMELINE = "/1.1/statuses/home_timeline.json"
+    let API_POST_NEW_STATUS = "/1.1/statuses/update.json"
+    let API_POST_NEW_FAVORITE = "/1.1/favorites/create.json"
+    let API_POST_DETROY_FAVORITE = "/1.1/favorites/destroy.json"
     
     
     
@@ -67,7 +67,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         loginCompletion = completion
         TwitterClient.shared?.deauthorize()
         
-        TwitterClient.shared?.fetchRequestToken(withPath: API_REQUEST_TOKEN, method: "GET", callbackURL: URL(string: "mytwitter://oauth"), scope: nil, success: { (request: BDBOAuth1Credential?) in
+        TwitterClient.shared?.fetchRequestToken(withPath: API_REQUEST_TOKEN, method: "POST", callbackURL: URL(string: "mytwitter://oauth"), scope: nil, success: { (request: BDBOAuth1Credential?) in
             
             let authURL = URL(string: "\(self.endPoint)\(self.API_AUTHENTICATE_TOKEN)\(request!.token!)")!
             UIApplication.shared.open(authURL, options: [:], completionHandler: nil)
@@ -128,7 +128,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         params["id"] = tweetId
         
         if isFavorite {
-            post(API_POST_NEW_FAVORITE, parameters: params, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            post("1.1/favorites/create.json", parameters: params, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
                 completion(response, nil)
                 print("Favorited!")
                 
